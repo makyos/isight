@@ -3,6 +3,7 @@
 INTERVAL=300 # (sec)
 AT=$(dirname $0)
 IMG=$AT/img
+LIB=$AT/lib
 
 function resize() {
     if [ -e $1 ]; then
@@ -43,7 +44,7 @@ do
        ${IMG}/screen_${timming}.png \
        ${IMG}/isight_${timming}.png
 
-    ${AT}/img2photos.js ${IMG}/${timming}.png
+    ${LIB}/img2photos.js ${IMG}/${timming}.png
         
     sleep ${INTERVAL}
 done

@@ -1,2 +1,3 @@
-/img/*
+img/*
+!.gitkeep
 .DS_Store
