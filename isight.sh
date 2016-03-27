@@ -17,15 +17,15 @@ while true;
 do
     timming=$(date +'%Y-%m-%d_%H-%M-%S')
     
-    ## screencapture from OS X
-    ## -x : without the sound playing
-    screencapture -x ${IMG}/screen_${timming}.png
-    resize ${IMG}/screen_${timming}.png
-    
     ## imagesnap from brew install imagesnap
     ## -w : wait focus (sec)
     imagesnap -w 3 ${IMG}/isight_${timming}.png > /dev/null
     resize ${IMG}/isight_${timming}.png
+    
+    ## screencapture from OS X
+    ## -x : without the sound playing
+    screencapture -x ${IMG}/screen_${timming}.png
+    resize ${IMG}/screen_${timming}.png
     
     if [ -e ${IMG}/screen_${timming}.png ] && [ -e ${IMG}/isight_${timming}.png ] ; then
 	convert -append \
