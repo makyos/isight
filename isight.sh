@@ -1,20 +1,29 @@
 #!/bin/bash
 
-INTERVAL=300 # (sec)
+INTERVAL=480 # (sec)
 AT=$(dirname $0)
 IMG=$AT/img
 LIB=$AT/lib
 
 function resize() {
     if [ -e $1 ]; then
-	mv $1 $1.tmp
-	convert $1.tmp -resize 1280x $1
-	rm $1.tmp
+	    mv $1 $1.tmp
+	    convert $1.tmp -resize 1280x $1
+	    rm $1.tmp
     fi
 }
 
-while true;
-do
+clamShellClose() {
+    [ $(ioreg -r -k AppleClamshellState -d 4 | grep AppleClamshellState | head -1 | cut -d = -f 2) = Yes ]
+}
+
+
+while true; do
+    
+    sleep ${INTERVAL}
+
+    if $(clamShellClose); then continue; fi
+    
     timming=$(date +'%Y-%m-%d_%H-%M-%S')
     
     ## imagesnap from brew install imagesnap
@@ -28,16 +37,16 @@ do
     resize ${IMG}/screen_${timming}.png
     
     if [ -e ${IMG}/screen_${timming}.png ] && [ -e ${IMG}/isight_${timming}.png ] ; then
-	convert -append \
-		${IMG}/screen_${timming}.png \
-		${IMG}/isight_${timming}.png \
-		${IMG}/${timming}.png
+	    convert -append \
+		    ${IMG}/screen_${timming}.png \
+		    ${IMG}/isight_${timming}.png \
+		    ${IMG}/${timming}.png
     fi
 
     ## pngquant from brew install pngquant
     ## --ext .png --force : over write
     if [ -e ${IMG}/${timming}.png ]; then
-	pngquant --ext .png --force ${IMG}/${timming}.png > /dev/null
+        pngquant --ext .png --force ${IMG}/${timming}.png > /dev/null
     fi
     
     rm -f \
@@ -45,7 +54,8 @@ do
        ${IMG}/isight_${timming}.png
 
     ${LIB}/img2photos.js ${IMG}/${timming}.png
+
+    ls -lh ${IMG}/${timming}.png
         
-    sleep ${INTERVAL}
 done
 
