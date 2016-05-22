@@ -17,11 +17,12 @@ clamShellClose() {
     [ $(ioreg -r -k AppleClamshellState -d 4 | grep AppleClamshellState | head -1 | cut -d = -f 2) = Yes ]
 }
 
+echo 'Start'
 
 while true; do
     
     sleep ${INTERVAL}
-
+    
     if $(clamShellClose); then continue; fi
     
     timming=$(date +'%Y-%m-%d_%H-%M-%S')
@@ -43,19 +44,17 @@ while true; do
 		    ${IMG}/${timming}.png
     fi
 
-    ## pngquant from brew install pngquant
-    ## --ext .png --force : over write
     if [ -e ${IMG}/${timming}.png ]; then
+        ## pngquant from brew install pngquant
+        ## --ext .png --force : over write
         pngquant --ext .png --force ${IMG}/${timming}.png > /dev/null
+        ${LIB}/img2photos.js ${IMG}/${timming}.png > /dev/null
+        ls -lh ${IMG}/${timming}.png
     fi
     
     rm -f \
        ${IMG}/screen_${timming}.png \
        ${IMG}/isight_${timming}.png
-
-    ${LIB}/img2photos.js ${IMG}/${timming}.png
-
-    ls -lh ${IMG}/${timming}.png
         
 done
 
