@@ -1,6 +1,6 @@
 #!/bin/bash
 
-INTERVAL=480 # (sec)
+INTERVAL=900 # (sec)
 AT=$(dirname $0)
 IMG=$AT/img
 LIB=$AT/lib
