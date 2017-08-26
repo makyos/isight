@@ -29,32 +29,38 @@ while true; do
     
     ## imagesnap from brew install imagesnap
     ## -w : wait focus (sec)
-    imagesnap -w 3 ${IMG}/isight_${timming}.png > /dev/null
-    resize ${IMG}/isight_${timming}.png
+    imagesnap -w 3 ${IMG}/isight_${timming}.jpg > /dev/null
+    resize ${IMG}/isight_${timming}.jpg
     
     ## screencapture from OS X
     ## -x : without the sound playing
-    screencapture -x ${IMG}/screen_${timming}.png
-    resize ${IMG}/screen_${timming}.png
+    screencapture -x -t jpg ${IMG}/screen_${timming}.jpg
+    resize ${IMG}/screen_${timming}.jpg
     
-    if [ -e ${IMG}/screen_${timming}.png ] && [ -e ${IMG}/isight_${timming}.png ] ; then
+    if [ -e ${IMG}/screen_${timming}.jpg ] && [ -e ${IMG}/isight_${timming}.jpg ] ; then
 	    convert -append \
-		    ${IMG}/screen_${timming}.png \
-		    ${IMG}/isight_${timming}.png \
-		    ${IMG}/${timming}.png
+		    ${IMG}/screen_${timming}.jpg \
+		    ${IMG}/isight_${timming}.jpg \
+		    ${IMG}/${timming}.jpg
     fi
 
-    if [ -e ${IMG}/${timming}.png ]; then
+    if [ -e ${IMG}/${timming}.jpg ]; then
         ## pngquant from brew install pngquant
         ## --ext .png --force : over write
-        pngquant --ext .png --force ${IMG}/${timming}.png > /dev/null
-        ${LIB}/img2photos.js ${IMG}/${timming}.png > /dev/null
-        ls -lh ${IMG}/${timming}.png
+        # pngquant --ext .png --force ${IMG}/${timming}.png > /dev/null
+
+	exiftool \
+	    -Model="isight.sh" \
+	    -overwrite_original \
+	    ${IMG}/${timming}.jpg > /dev/null
+	
+        ${LIB}/img2photos.js ${IMG}/${timming}.jpg > /dev/null
+        ls -lh ${IMG}/${timming}.jpg
     fi
     
     rm -f \
-       ${IMG}/screen_${timming}.png \
-       ${IMG}/isight_${timming}.png
-        
+       ${IMG}/screen_${timming}.jpg \
+       ${IMG}/isight_${timming}.jpg
+
 done
 
