@@ -7,9 +7,9 @@ LIB=$AT/lib
 
 function resize() {
     if [ -e $1 ]; then
-	    mv $1 $1.tmp
-	    convert $1.tmp -resize 1280x $1
-	    rm $1.tmp
+        mv $1 $1.tmp
+        convert $1.tmp -resize 1280x $1
+        rm $1.tmp
     fi
 }
 
@@ -20,8 +20,6 @@ clamShellClose() {
 echo 'Start'
 
 while true; do
-    
-    sleep ${INTERVAL}
     
     if $(clamShellClose); then continue; fi
     
@@ -37,6 +35,7 @@ while true; do
     screencapture -x -t jpg ${IMG}/screen_${timming}.jpg
     resize ${IMG}/screen_${timming}.jpg
     
+    ## Mearge
     if [ -e ${IMG}/screen_${timming}.jpg ] && [ -e ${IMG}/isight_${timming}.jpg ] ; then
 	    convert -append \
 		    ${IMG}/screen_${timming}.jpg \
@@ -49,18 +48,21 @@ while true; do
         ## --ext .png --force : over write
         # pngquant --ext .png --force ${IMG}/${timming}.png > /dev/null
 
-	exiftool \
-	    -Model="isight.sh" \
-	    -overwrite_original \
-	    ${IMG}/${timming}.jpg > /dev/null
-	
-        ${LIB}/img2photos.js ${IMG}/${timming}.jpg > /dev/null
+    	exiftool \
+	        -Model="isight.sh" \
+	        -overwrite_original \
+	        ${IMG}/${timming}.jpg > /dev/null
+
+        ## import Photos APP
+        # ${LIB}/img2photos.js ${IMG}/${timming}.jpg > /dev/null
         ls -lh ${IMG}/${timming}.jpg
     fi
     
     rm -f \
        ${IMG}/screen_${timming}.jpg \
        ${IMG}/isight_${timming}.jpg
+
+    sleep ${INTERVAL}
 
 done
 
